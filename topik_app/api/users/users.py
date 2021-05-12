@@ -1,5 +1,6 @@
 from enum import Enum
 from topik_app.extensions import db
+from sqlalchemy.orm import validates
 
 
 # Defining the Enum roles
@@ -16,10 +17,10 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)
-    phone_number = db.Column(db.BigInteger, nullable=False, unique=True)
+    password = db.Column(db.String(200), nullable=True)
+    phone_number = db.Column(db.BigInteger, nullable=True, unique=True)
     profile_picture = db.Column(db.String(500), nullable=True)
-    date_of_birth = db.Column(db.DateTime, nullable=False)
+    date_of_birth = db.Column(db.DateTime, nullable=True)
     role = db.Column(db.Enum(RoleEnum), nullable=False)
     address = db.Column(db.String(300), nullable=True)
     created_on = db.Column(db.DateTime, server_default=db.func.now())
@@ -36,5 +37,6 @@ class User(db.Model):
         self.role = role
         self.address = address
 
-    # def __repr__(self):
-    #     return '<User %r>' % self.username
+    @validates('email')
+    def convert_lower(self, key, value):
+        return value.lower()
