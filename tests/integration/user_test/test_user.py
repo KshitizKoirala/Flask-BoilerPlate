@@ -1,6 +1,3 @@
-import pytest
-
-
 # Core Library modules
 import ast
 from base64 import b64encode
